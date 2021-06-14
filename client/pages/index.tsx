@@ -1,3 +1,4 @@
+import axios from "axios";
 import Head from "next/head";
 import { FC, useState } from "react";
 import { mediaUrl } from "../utils/mediaUrl";
@@ -14,7 +15,9 @@ const Home: FC = () => {
     }
   };
 
-  const uploadHandel = () => {};
+  const uploadHandel = () => {
+    axios.get("http://localhost:5000").then((res: any) => {});
+  };
 
   const removeHandel = () => {};
 
