@@ -35,3 +35,5 @@ yarn-error.log*
 .vercel
 
 next.config.js
+
+t.md
