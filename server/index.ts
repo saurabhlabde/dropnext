@@ -53,7 +53,7 @@ app.post('/upload/nextcloud', uploadImage, async (req: any, res: any) => {
 
 })
 
-app.post('/upload/dropbox', uploadImage, (req: any, res: any) => {
+app.post('/upload/dropbox', uploadImage, async (req: any, res: any) => {
 
         if (req.error) {
                 return res.json({ errors: req.error })
@@ -67,28 +67,42 @@ app.post('/upload/dropbox', uploadImage, (req: any, res: any) => {
                 token: DROPBOX_TOKEN
         });
 
-        const params = Object.freeze({
+        const image: string = `${nanoid()}.${fileType}`
+
+        console.log(image, 'image');
+
+
+        const paramsUpload = Object.freeze({
                 resource: 'files/upload',
                 parameters: {
-                        path: `/upload/${nanoid()}.${fileType}`
+                        path: `/upload/${image}`
                 },
                 readStream: fs.createReadStream(path)
         });
 
-        let dropboxPromise = new Promise(function (resolve: any, reject: any) {
-                dropbox(params, function (err: any, result: any) {
-                        if (err) {
-                                reject(err);
-                        } else {
-                                resolve(result);
-                        }
-                });
+        const paramsDownload = Object.freeze({
+                resource: 'files/download',
+                parameters: {
+                        path: `/upload/${image}`
+                }
         });
 
-        dropboxPromise.then(function (resultObj) {
-                return res.json({ success: "Your file has been successfully added." })
-        }).catch(function (err) {
-                return res.json({ errors: err })
+        await dropbox(paramsUpload, (err: any, result: any) => {
+                if (err) {
+                        console.log(err, 'upload err');
+                } else {
+                        console.log('uploaded...');
+
+                        (async () => {
+                                await dropbox(paramsDownload, (err: any, result: any) => {
+                                        if (err) {
+                                                console.log(err, 'download err');
+                                        } else {
+                                                console.log(result, 'result download');
+                                        }
+                                }).pipe(fs.createWriteStream(`./download/${image}`));
+                        })()
+                }
         });
 })
 
