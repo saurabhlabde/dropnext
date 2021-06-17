@@ -1,4 +1,5 @@
 node_modules
+./download
 .env
 env.ts
 
@@ -6,3 +7,4 @@ env.ts
 .gif
 .jpeg
 .jpg
+

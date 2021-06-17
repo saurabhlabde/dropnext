@@ -46,6 +46,15 @@ app.post('/upload/nextcloud', uploadImage, async (req: any, res: any) => {
         }
 
         await folder?.createFile(fileName, imgData).then((res: any) => {
+                (async () => {
+                        const getFile = await folder.getFile(`/${fileName}`)
+
+                        const url: any = getFile.getUrl();
+
+                        console.log(url, 'url');
+
+                })()
+
                 return res.json({ success: "Your file has been successfully added." })
         }).catch((err: any) => {
                 return res.json({ errors: err })

@@ -3,12 +3,10 @@ import { FC, useState } from "react";
 import { mediaUrl } from "../utils/mediaUrl";
 import { media } from "../utils/media";
 import { v4 } from "uuid";
+import { useEffect } from "react";
 
 const Home: FC = () => {
   const [selectedImage, setSelectedImage] = useState(null);
-  const [uploadedImage, setUploadedImage] = useState(null);
-  const [showRemoveBtn, setShowRemoveBtn] = useState(false);
-  const [photo, setPhoto] = useState([]);
   const [file, setFile] = useState(null);
 
   const inputChangeHandel = (e: any) => {
@@ -32,19 +30,13 @@ const Home: FC = () => {
       },
     };
     axios
-      .post("http://localhost:5000/upload/dropbox", formData, config)
+      .post("http://localhost:5000/upload/nextcloud", formData, config)
       .then((response) => {
         console.log("image upload successfully");
       })
       .catch((e) => {
         console.log("image upload error", e);
       });
-  };
-
-  const removeHandel = () => {};
-
-  const uplodImageHoveHandel = () => {
-    setShowRemoveBtn(!showRemoveBtn);
   };
 
   return (
@@ -80,33 +72,7 @@ const Home: FC = () => {
             </div>
           </form>
         </div>
-        {uploadedImage && (
-          <div className="bottom-sec">
-            <div className="upload-heading-sec">
-              <h1 className="upload-heading">
-                <span>Uploaded image</span>
-              </h1>
-            </div>
-            <div
-              className="upload-img-sec"
-              onMouseEnter={uplodImageHoveHandel}
-              onMouseLeave={uplodImageHoveHandel}
-            >
-              <img
-                className="upload-img img"
-                src={`${setUploadedImage}`}
-                alt={`${setUploadedImage}`}
-              />
-              {showRemoveBtn && (
-                <div className="remove-btn" onClick={removeHandel}>
-                  <h2 className="remove-btn-text">
-                    <span>REMOVE</span>
-                  </h2>
-                </div>
-              )}
-            </div>
-          </div>
-        )}
+        <div className="bottom-sec"></div>
       </div>
     </main>
   );
