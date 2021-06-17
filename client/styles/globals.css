@@ -55,6 +55,7 @@ a {
 .select-media-sec {
   width: 100%;
   height: 20em;
+  position: relative;
 }
 
 .select-label {
@@ -151,4 +152,24 @@ a {
 
 .success-close-message-btn-sec:hover {
   background-color: var(--close-btn-success);
+}
+
+.remove_btn {
+  background-color: var(--close-btn-success);
+  border-radius: 5em;
+  padding: 0 1rem;
+  position: absolute;
+  right: 1em;
+  top: 1em;
+  cursor: pointer;
+  z-index: 1;
+}
+
+.remove_btn:hover {
+  background-color: var(--close-btn-error);
+}
+.remove_btn_text {
+  font-size: 0.9em;
+  text-transform: uppercase;
+  color: var(--text-primary);
 }

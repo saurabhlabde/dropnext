@@ -15,7 +15,7 @@ export const MessageCard: FC<IMessageCard> = ({ props, onClose }) => {
     <div className={`message-card  ${type}-message-card`} id={`${id}-card`}>
       <div className="message-sec">
         <h1 className="message-text">
-          <span>{message}</span>
+          <span className="t_span">{message}</span>
         </h1>
       </div>
       <div
@@ -25,7 +25,7 @@ export const MessageCard: FC<IMessageCard> = ({ props, onClose }) => {
         }}
       >
         <h1 className="close-btn-text">
-          <span>Close</span>
+          <span className="t_span">close</span>
         </h1>
       </div>
     </div>

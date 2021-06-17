@@ -59,12 +59,24 @@ const Home: FC = () => {
     setMessage(filterMessage);
   };
 
+  const removeHandel = () => {
+    setSelectedImage(null);
+    setFile(null);
+  };
+
   return (
     <main className="next-main">
       <div className="next-sec">
         <div className="top-sec">
           <form onSubmit={uploadHandel}>
             <div className="select-media-sec">
+              {selectedImage && (
+                <div className="remove_btn" onClick={removeHandel}>
+                  <h1 className="remove_btn_text">
+                    <span className="t_span">remove</span>
+                  </h1>
+                </div>
+              )}
               <label htmlFor="next-input" className="select-label">
                 {selectedImage ? (
                   <img
@@ -74,7 +86,7 @@ const Home: FC = () => {
                   />
                 ) : (
                   <h1 className="select-img-text">
-                    <span>Select image</span>
+                    <span className="t_span">select image</span>
                   </h1>
                 )}
               </label>
@@ -89,7 +101,7 @@ const Home: FC = () => {
 
             <div className="upload-btn-sec">
               <button className="upload-btn" type="submit">
-                Upload
+                <span className="t_span">upload</span>
               </button>
             </div>
           </form>
