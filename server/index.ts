@@ -2,33 +2,32 @@ import express from 'express'
 import cors from 'cors'
 import fs from 'fs'
 import { nanoid } from 'nanoid'
-import dropboxV2Api from 'dropbox-v2-api'
 import { Folder } from 'nextcloud-node-client';
-import { uploadImage } from './utils/multer';
-import { nextCloud } from './nextcloud'
-import { DROPBOX_TOKEN } from './env';
 
 require('dotenv').config();
+
+import { uploadImage } from './utils/multer';
+import { nextCloud } from './nextcloud'
+import { dropbox } from './dropbox'
 
 const app = express()
 
 app.use(
         cors({
-                origin: "http://localhost:3000"
+                origin: process.env.CLIENT_URL
         })
 );
 
 app.use(cors());
+
 app.use(express.json());
 
-app.get("/", (req, res) => {
-        res.json({ hello: 'hello index' })
-})
+const PORT: number = +process.env.PORT || 5000
 
 app.post('/upload/nextcloud', uploadImage, async (req: any, res: any) => {
 
         if (req.error) {
-                return res.json({ errors: req.error })
+                return res.json(req.error)
         }
 
         const { client } = nextCloud()
@@ -39,25 +38,32 @@ app.post('/upload/nextcloud', uploadImage, async (req: any, res: any) => {
 
         const fileName: string = `${nanoid()}.${fileType}`
 
-        const folder: Folder = await client.getFolder("/upload");
+        let folder: Folder;
+
+        folder = await client.getFolder("/upload");
 
         if (!folder) {
-                return res.json({ errors: 'folder not found' })
+                folder = await client.createFolder("/upload");
         }
 
+        // create file
+
         await folder?.createFile(fileName, imgData).then((res: any) => {
-                (async () => {
-                        const getFile = await folder.getFile(`/${fileName}`)
 
-                        const url: any = getFile.getUrl();
+                // get image url
 
-                        console.log(url, 'url');
+                // (async () => {
+                //         const getFile = await folder.getFile(`/${fileName}`)
 
-                })()
+                //         const url: any = getFile.getUrl();
+                // })()
 
-                return res.json({ success: "Your file has been successfully added." })
+                return res.json({ id: nanoid(), message: 'Image upload successfully.', type: 'success' })
+
         }).catch((err: any) => {
-                return res.json({ errors: err })
+
+                return res.json({ id: nanoid(), message: 'Image upload failed.', type: 'error' })
+
         });
 
 })
@@ -72,14 +78,7 @@ app.post('/upload/dropbox', uploadImage, async (req: any, res: any) => {
 
         const fileType: string = req.file.mimetype?.split("/")[1]
 
-        const dropbox: any = dropboxV2Api.authenticate({
-                token: DROPBOX_TOKEN
-        });
-
         const image: string = `${nanoid()}.${fileType}`
-
-        console.log(image, 'image');
-
 
         const paramsUpload = Object.freeze({
                 resource: 'files/upload',
@@ -98,23 +97,35 @@ app.post('/upload/dropbox', uploadImage, async (req: any, res: any) => {
 
         await dropbox(paramsUpload, (err: any, result: any) => {
                 if (err) {
-                        console.log(err, 'upload err');
-                } else {
-                        console.log('uploaded...');
 
-                        (async () => {
-                                await dropbox(paramsDownload, (err: any, result: any) => {
-                                        if (err) {
-                                                console.log(err, 'download err');
-                                        } else {
-                                                console.log(result, 'result download');
-                                        }
-                                }).pipe(fs.createWriteStream(`./download/${image}`));
-                        })()
+                        return res.json({ id: nanoid(), message: 'Image upload failed.', type: 'error' })
+
+                } else {
+
+                        return res.json({ id: nanoid(), message: 'Image upload successfully.', type: 'success' })
+
+                        // download image 
+
+                        // (async () => {
+                        //         await dropbox(paramsDownload, (err: any, result: any) => {
+                        //                 if (err) {
+
+                        //                         console.log('error download image');
+
+                        //                 } else {
+
+                        //                         console.log('successfully download image');
+
+                        //                 }
+
+                        //         }).pipe(fs.createWriteStream(`./download/${image}`));
+                        // })()
                 }
         });
 })
 
-app.listen(5000, () => {
+app.listen(PORT, () => {
+
         console.log(`Server successfully created on Port: 5000`);
+
 });

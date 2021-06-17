@@ -1,4 +1,5 @@
 import multer from 'multer'
+import { nanoid } from 'nanoid';
 
 
 const storage = multer.diskStorage({
@@ -18,10 +19,11 @@ const upload = multer({
                         cb(null, true);
                 } else {
                         cb(null, false);
-                        req.error = 'Only .png, .jpg and .jpeg allowed';
+                        req.error = { id: nanoid(), message: 'Only .png, .jpg and .jpeg allowed', type: 'error' };
                         return cb(null, false, new Error('Only .png, .jpg and .jpeg format allowed!'));
                 }
         }
 });
 
 export const uploadImage = upload.single('photo')
+
