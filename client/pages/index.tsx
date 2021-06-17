@@ -1,8 +1,13 @@
-import axios from "axios";
 import { FC, useState } from "react";
-import { mediaUrl } from "../utils/mediaUrl";
-import { media } from "../utils/media";
+import axios from "axios";
+
+// component
 import { MessageCard } from "../ui/message";
+import { Dropdown } from "../ui/dropdown";
+
+// utils
+import { media } from "../utils/media";
+import { mediaUrl } from "../utils/mediaUrl";
 
 interface IMessage {
   id: string;
@@ -13,6 +18,7 @@ interface IMessage {
 const Home: FC = () => {
   const [selectedImage, setSelectedImage] = useState(null);
   const [file, setFile] = useState(null);
+  const [seletedDDItem, setSeletedDDItem] = useState("nextcloud");
   const [message, setMessage] = useState([]);
 
   const inputChangeHandel = (e: any) => {
@@ -35,8 +41,11 @@ const Home: FC = () => {
         "content-type": "multipart/form-data",
       },
     };
+
+    const uploadUrl: string = `http://localhost:5000/upload/${seletedDDItem?.toLocaleLowerCase()}`;
+
     axios
-      .post("http://localhost:5000/upload/nextcloud", formData, config)
+      .post(uploadUrl, formData, config)
       .then((res) => {
         setMessage((prevMessage) => {
           return [...prevMessage, res.data];
@@ -98,7 +107,12 @@ const Home: FC = () => {
                 onChange={inputChangeHandel}
               />
             </div>
-
+            <div className="dropdown-section">
+              <Dropdown
+                seletedItem={seletedDDItem}
+                setSeletedItem={setSeletedDDItem}
+              />
+            </div>
             <div className="upload-btn-sec">
               <button className="upload-btn" type="submit">
                 <span className="t_span">upload</span>

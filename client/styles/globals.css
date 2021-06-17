@@ -27,6 +27,14 @@ a {
   font-weight: normal;
 }
 
+.t_span {
+  display: block;
+}
+
+.t_span:first-letter {
+  text-transform: uppercase;
+}
+
 .next-main {
   background-color: var(--bg-primary);
   height: 100vh;
@@ -172,4 +180,53 @@ a {
   font-size: 0.9em;
   text-transform: uppercase;
   color: var(--text-primary);
+}
+
+.dropdown-section {
+  margin: 1rem 0;
+}
+
+.drop-down-section {
+  height: 3.5em;
+  width: 100%;
+  background-color: var(--bg-secondary);
+  border-radius: 1.2em;
+  position: relative;
+}
+
+.dd-top-section {
+  padding: 0.5rem;
+}
+
+.di-text {
+  font-size: 1em;
+  color: var(--text-primary);
+}
+
+.dd-bottom-section {
+  position: absolute;
+  top: 4em;
+  left: 0;
+  background-color: var(--bg-secondary);
+  width: 100%;
+  border-radius: 1.2em;
+  padding: 0.1rem 0.5rem;
+}
+
+.drop-down-item {
+  margin: 0.5rem 0;
+}
+
+.dd-item {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  background-color: var(--bg-primary);
+  border-radius: 1em;
+  padding-left: 1rem;
+  cursor: default;
+}
+
+.dd-item:hover {
+  background-color: var(--close-btn-success);
 }
