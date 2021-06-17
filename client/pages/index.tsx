@@ -16,6 +16,7 @@ interface IMessage {
 }
 
 const Home: FC = () => {
+  const [loading, setLoading] = useState(false);
   const [selectedImage, setSelectedImage] = useState(null);
   const [file, setFile] = useState(null);
   const [seletedDDItem, setSeletedDDItem] = useState("nextcloud");
@@ -31,6 +32,10 @@ const Home: FC = () => {
 
   const uploadHandel = (e: any) => {
     e?.preventDefault();
+
+    setLoading(true);
+
+    if (loading) return;
 
     const formData = new FormData();
 
@@ -52,11 +57,13 @@ const Home: FC = () => {
         });
         setSelectedImage(null);
         setFile(null);
+        setLoading(false);
       })
       .catch((e) => {
         setMessage((prevMessage) => {
           return [...prevMessage, e.data];
         });
+        setLoading(false);
       });
   };
 
@@ -113,11 +120,15 @@ const Home: FC = () => {
                 setSeletedItem={setSeletedDDItem}
               />
             </div>
-            <div className="upload-btn-sec">
-              <button className="upload-btn" type="submit">
-                <span className="t_span">upload</span>
-              </button>
-            </div>
+            {selectedImage && (
+              <div className="upload-btn-sec">
+                <button className="upload-btn" type="submit">
+                  <span className="t_span">
+                    {loading ? "uploading..." : "upload"}
+                  </span>
+                </button>
+              </div>
+            )}
           </form>
         </div>
       </div>
