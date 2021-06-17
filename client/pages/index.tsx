@@ -2,12 +2,18 @@ import axios from "axios";
 import { FC, useState } from "react";
 import { mediaUrl } from "../utils/mediaUrl";
 import { media } from "../utils/media";
-import { v4 } from "uuid";
-import { useEffect } from "react";
+import { MessageCard } from "../ui/message";
+
+interface IMessage {
+  id: string;
+  message: string;
+  type: string;
+}
 
 const Home: FC = () => {
   const [selectedImage, setSelectedImage] = useState(null);
   const [file, setFile] = useState(null);
+  const [message, setMessage] = useState([]);
 
   const inputChangeHandel = (e: any) => {
     const resFile = media(e);
@@ -31,12 +37,26 @@ const Home: FC = () => {
     };
     axios
       .post("http://localhost:5000/upload/nextcloud", formData, config)
-      .then((response) => {
-        console.log("image upload successfully");
+      .then((res) => {
+        setMessage((prevMessage) => {
+          return [...prevMessage, res.data];
+        });
+        setSelectedImage(null);
+        setFile(null);
       })
       .catch((e) => {
-        console.log("image upload error", e);
+        setMessage((prevMessage) => {
+          return [...prevMessage, e.data];
+        });
       });
+  };
+
+  const closeHandel = (id: string) => {
+    const filterMessage: Array<IMessage> = message?.filter((mess: IMessage) => {
+      return mess.id !== id;
+    });
+
+    setMessage(filterMessage);
   };
 
   return (
@@ -58,6 +78,7 @@ const Home: FC = () => {
                   </h1>
                 )}
               </label>
+
               <input
                 type="file"
                 id="next-input"
@@ -65,6 +86,7 @@ const Home: FC = () => {
                 onChange={inputChangeHandel}
               />
             </div>
+
             <div className="upload-btn-sec">
               <button className="upload-btn" type="submit">
                 Upload
@@ -72,8 +94,16 @@ const Home: FC = () => {
             </div>
           </form>
         </div>
-        <div className="bottom-sec"></div>
       </div>
+      {message?.length >= 1 && (
+        <div className="pop-message-section">
+          {message?.map((props: IMessage) => {
+            return (
+              <MessageCard key={props.id} props={props} onClose={closeHandel} />
+            );
+          })}
+        </div>
+      )}
     </main>
   );
 };

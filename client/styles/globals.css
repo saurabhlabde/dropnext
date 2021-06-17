@@ -4,6 +4,10 @@
   --text-primary: #fefefe;
   --text-secondary: #cfbbbb;
   --btn-primary: #246afd;
+  --mss-success: rgba(255, 166, 0, 0.65);
+  --mss-error: rgba(253, 36, 47, 0.65);
+  --close-btn-error: #ff7c0160;
+  --close-btn-success: #ff014160;
 }
 
 html,
@@ -30,6 +34,7 @@ a {
   display: flex;
   align-items: center;
   justify-content: center;
+  position: relative;
 }
 
 .next-sec {
@@ -91,4 +96,59 @@ a {
 .select-img-text {
   font-size: 1.2em;
   color: var(--text-secondary);
+}
+
+.pop-message-section {
+  position: fixed;
+  right: 1em;
+  top: 1em;
+}
+
+.message-card {
+  height: 3em;
+  background-color: var(--mss-error);
+  width: auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-radius: 1em;
+  padding: 1rem 0.5rem 1rem 1rem;
+}
+
+.message-sec {
+  margin-right: 1rem;
+}
+
+.message-text {
+  color: var(--text-primary);
+  font-size: 0.9em;
+  cursor: default;
+}
+
+.close-message-btn-sec {
+  padding: 0 0.8rem;
+  border-radius: 5em;
+  cursor: pointer;
+}
+
+.close-btn-text {
+  color: var(--text-primary);
+  font-size: 0.8em;
+  text-transform: uppercase;
+}
+
+.success-message-card {
+  background-color: var(--mss-success);
+}
+
+.error-message-card {
+  background-color: var(--mss-error);
+}
+
+.error-close-message-btn-sec:hover {
+  background-color: var(--close-btn-error);
+}
+
+.success-close-message-btn-sec:hover {
+  background-color: var(--close-btn-success);
 }

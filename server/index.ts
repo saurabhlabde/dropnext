@@ -48,7 +48,7 @@ app.post('/upload/nextcloud', uploadImage, async (req: any, res: any) => {
 
         // create file
 
-        await folder?.createFile(fileName, imgData).then((res: any) => {
+        await folder?.createFile(fileName, imgData).then((response: any) => {
 
                 // get image url
 
@@ -61,6 +61,9 @@ app.post('/upload/nextcloud', uploadImage, async (req: any, res: any) => {
                 return res.json({ id: nanoid(), message: 'Image upload successfully.', type: 'success' })
 
         }).catch((err: any) => {
+
+                console.log(err, 'err');
+
 
                 return res.json({ id: nanoid(), message: 'Image upload failed.', type: 'error' })
 
@@ -102,7 +105,6 @@ app.post('/upload/dropbox', uploadImage, async (req: any, res: any) => {
 
                 } else {
 
-                        return res.json({ id: nanoid(), message: 'Image upload successfully.', type: 'success' })
 
                         // download image 
 
@@ -120,6 +122,8 @@ app.post('/upload/dropbox', uploadImage, async (req: any, res: any) => {
 
                         //         }).pipe(fs.createWriteStream(`./download/${image}`));
                         // })()
+
+                        return res.json({ id: nanoid(), message: 'Image upload successfully.', type: 'success' })
                 }
         });
 })
